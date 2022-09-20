@@ -1,7 +1,7 @@
-simple color palette generator
+🎨 Color Palette Gernerator 👨‍🎨
 
-random color,
-add & remove color from palette,
-color picker,
-drag and drop,
-extract color from image ?
+Palette  
+Filter  
+Add & Remove Color  
+Move Color + drag and drop  
+Extract color from Image ... if there is time...
