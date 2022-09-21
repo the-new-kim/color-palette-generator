@@ -1,4 +1,4 @@
-import { IColor } from "../atoms";
+import { IColor } from "../lib/types";
 
 interface IColorProps {
   color: IColor;

@@ -11,6 +11,7 @@ export interface IColorPickerState {
 
 function Palette() {
   const [palette, setPalette] = useRecoilState(paletteState);
+  console.log(palette);
 
   const [colorPickerOpen, setColorPickerOpen] = useState<boolean>(false);
 
