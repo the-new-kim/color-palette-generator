@@ -1,4 +1,4 @@
-import { IColor } from "../lib/types";
+import { IColor } from "../types";
 
 interface IColorProps {
   color: IColor;

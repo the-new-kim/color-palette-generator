@@ -1,10 +1,8 @@
 import { atom } from "recoil";
-import { generatePalette } from "./lib/helpers";
-import { ColorHarmonies, IPalette } from "./lib/types";
+import { generatePalette } from "./helpers";
+import { IPalette } from "./types";
 
-const defaultPalette = generatePalette({
-  colorHarmony: ColorHarmonies.Complementary,
-});
+const defaultPalette = generatePalette({});
 
 export const paletteState = atom<IPalette>({
   key: "paletteState",
