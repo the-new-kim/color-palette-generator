@@ -7,7 +7,7 @@ function Layout() {
   return (
     <>
       <main className="min-h-screen flex flex-col">
-        <Header />
+        {/* <Header /> */}
         <Suspense>
           <Outlet />
         </Suspense>

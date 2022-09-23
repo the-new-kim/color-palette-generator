@@ -5,6 +5,7 @@ export enum EColorHarmonies {
   SQUARE,
   ANALOGOUS,
   NEUTRAL,
+  MONOCHROMATIC,
 }
 
 export enum ESaturation {
@@ -23,6 +24,7 @@ export interface IColor {
   hue: number;
   saturation: number;
   lightness: number;
+  isBaseColor?: boolean;
 }
 
 export interface IPalette {

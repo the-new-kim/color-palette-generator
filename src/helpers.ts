@@ -1,13 +1,75 @@
 import { EColorHarmonies, ELightness, ESaturation, IColor } from "./types";
 
+//https://css-tricks.com/converting-color-spaces-in-javascript/
+export const HSLToHex = (
+  hue: number,
+  saturation: number,
+  lightness: number
+) => {
+  saturation /= 100;
+  lightness /= 100;
+
+  let c = (1 - Math.abs(2 * lightness - 1)) * saturation,
+    x = c * (1 - Math.abs(((hue / 60) % 2) - 1)),
+    m = lightness - c / 2,
+    red: number | string = 0,
+    green: number | string = 0,
+    blue: number | string = 0;
+
+  if (0 <= hue && hue < 60) {
+    red = c;
+    green = x;
+    blue = 0;
+  } else if (60 <= hue && hue < 120) {
+    red = x;
+    green = c;
+    blue = 0;
+  } else if (120 <= hue && hue < 180) {
+    red = 0;
+    green = c;
+    blue = x;
+  } else if (180 <= hue && hue < 240) {
+    red = 0;
+    green = x;
+    blue = c;
+  } else if (240 <= hue && hue < 300) {
+    red = x;
+    green = 0;
+    blue = c;
+  } else if (300 <= hue && hue < 360) {
+    red = c;
+    green = 0;
+    blue = x;
+  }
+  // Having obtained RGB, convert channels to hex
+  red = Math.round((red + m) * 255).toString(16);
+  green = Math.round((green + m) * 255).toString(16);
+  blue = Math.round((blue + m) * 255).toString(16);
+
+  // Prepend 0s, if necessary
+  if (red.length == 1) red = "0" + red;
+  if (green.length == 1) green = "0" + green;
+  if (blue.length == 1) blue = "0" + blue;
+
+  return "#" + red + green + blue;
+};
+
+export const getAverage = (numbers: number[]) => {
+  let sum = 0;
+  numbers.map((number, index) => (sum += number));
+  return Math.floor(sum / numbers.length);
+};
+
 export const generateSingleColor = ({
   hue,
   saturation,
   lightness,
+  isBaseColor,
 }: {
   hue?: number;
   saturation?: number | ESaturation;
   lightness?: number | ELightness;
+  isBaseColor: boolean;
 }) => {
   if (typeof hue === "undefined") {
     hue = Math.floor(Math.random() * 360);
@@ -42,18 +104,19 @@ export const generateSingleColor = ({
   }
 
   // else .....get lightness directly as a number
-  console.log(hue, saturation, lightness);
-  return { hue, saturation, lightness };
+
+  return { hue, saturation, lightness, isBaseColor };
 };
 
 export const generateMultipleColors = (
-  paletteLenght: number,
+  baseColor: IColor,
   hueDegreePatterns: number[],
-  primaryColor: IColor
+  needUnshift: boolean = false,
+  paletteLenght: number = 5
 ) => {
-  const { hue, saturation, lightness } = primaryColor;
+  const { hue, saturation, lightness } = baseColor;
 
-  let colors = [primaryColor];
+  let colors = [baseColor];
   let currentIndex = 0;
   let currentHue = hue;
 
@@ -63,44 +126,35 @@ export const generateMultipleColors = (
     } else {
       currentIndex = 0;
     }
-    currentHue += hueDegreePatterns[currentIndex];
+    currentHue = (currentHue + hueDegreePatterns[currentIndex]) % 360;
 
-    ////////❗ looper if paletteLenth is bigger than patterns length...
-
-    // Filter ?
-
-    // Random ?
-
-    // const color = generateSingleColor({
-    //   hue: currentHue,
-    // });
-    // colors.push(color);
-
-    // Default: Saturation & Lightness are same as primary
     const color = generateSingleColor({
       hue: currentHue,
-      saturation,
-      lightness,
+      isBaseColor: false,
     });
 
-    colors.push(color);
+    needUnshift
+      ? i % 2 === 0
+        ? colors.push(color)
+        : colors.unshift(color)
+      : colors.push(color);
   }
-
+  // ⌚ Think about the changing position(index) of baseColor...
   return colors;
 };
 
 export const generatePalette = ({
-  primaryColor,
+  baseColor,
   colorHarmony,
 }: {
-  primaryColor?: IColor;
+  baseColor?: IColor;
   colorHarmony?: EColorHarmonies;
 }) => {
   let colors: IColor[] = [];
   let harmonyName = "";
 
-  if (typeof primaryColor === "undefined") {
-    primaryColor = generateSingleColor({});
+  if (typeof baseColor === "undefined") {
+    baseColor = generateSingleColor({ isBaseColor: true });
   }
 
   if (typeof colorHarmony === "undefined") {
@@ -115,17 +169,19 @@ export const generatePalette = ({
   harmonyName = EColorHarmonies[colorHarmony];
 
   if (colorHarmony === EColorHarmonies.COMPLEMENTARY) {
-    colors = generateMultipleColors(2, [180], primaryColor);
+    colors = generateMultipleColors(baseColor, [180], true);
   } else if (colorHarmony === EColorHarmonies.TRIADIC) {
-    colors = generateMultipleColors(3, [120], primaryColor);
+    colors = generateMultipleColors(baseColor, [120]);
   } else if (colorHarmony === EColorHarmonies.TETRIADIC) {
-    colors = generateMultipleColors(4, [60, 120], primaryColor);
+    colors = generateMultipleColors(baseColor, [60, 120]);
   } else if (colorHarmony === EColorHarmonies.SQUARE) {
-    colors = generateMultipleColors(4, [90], primaryColor);
+    colors = generateMultipleColors(baseColor, [90]);
   } else if (colorHarmony === EColorHarmonies.ANALOGOUS) {
-    colors = generateMultipleColors(3, [30], primaryColor);
+    colors = generateMultipleColors(baseColor, [30]);
   } else if (colorHarmony === EColorHarmonies.NEUTRAL) {
-    colors = generateMultipleColors(3, [15], primaryColor);
+    colors = generateMultipleColors(baseColor, [15]);
+  } else if (colorHarmony === EColorHarmonies.MONOCHROMATIC) {
+    colors = generateMultipleColors(baseColor, [0]);
   }
 
   return { colors, harmonyName };

@@ -1,36 +1,37 @@
-🎨 Color Palette Gernerator 👨‍🎨
+🎨 Color Palette Gernerator 👨‍🎨          
 
-Palette  
-Filter  
-Add & Remove Color  
-Move Color + drag and drop  
-Extract color from Image ... if there is time...
+[ ] Set Base Color   
+[x] Filter(Color Harmonies)  
+[x] Add Color  
+[ ] Remove Color
+[ ] Move Color + drag and drop  
+[ ] Extract Color from Image ... if there is time...   
 
-////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////          
 
-📝 Color Harmonies
+📝 Color Harmonies      
 Complementary  
 Triadic  
 Tetradic (60deg & 120deg)  
 Square  
 Analogous (30deg)  
 Neutral (15deg)  
-Monochromatic
+Monochromatic          
 
-📝 Color Shades, Tints and Tones
+📝 Color Shades, Tints and Tones         
 Shades (Adding Black: lightness ⬇️ )    
 Tints (Adding White: lightness ⬆️ )     
 Tones (Adding Gray: saturation ⬇️ lightness ⬆️)    
 
 
-⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙
-⚙ Generating process ⚙   
-⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙
+⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙    
+⚙ Generating process ⚙     
+⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙     
 
 generatePalette()    
     ⬇  
-?primaryColor? no ➡ primaryColor = generateSingleColor()   
-   yes
+?baseColor? no ➡ baseColor = generateSingleColor()   
+   yes        
     ⬇  
 generateMultipleColors()    
     ⬇  
@@ -42,8 +43,8 @@ each colors(loop)
 generateSinglColor()    
     ⬇     
 ?any filter for H,S,L? no ➡ random H,S,L    
-   yes
-    ⬇
-  DONE!
+   yes    
+    ⬇     
+  DONE!     
 
-////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////       
