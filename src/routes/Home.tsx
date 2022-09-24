@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { baseColorState, paletteState } from "../atoms";
-import ColorPicker from "../components/ColorPicker";
+// import ColorPicker from "../components/ColorPicker";
 import Filter from "../components/Filter";
-import Modal from "../components/Modal";
+// import Modal from "../components/Modal";
 import Palette from "../components/Palette";
 
 function Home() {
@@ -11,7 +11,7 @@ function Home() {
 
   const palette = useRecoilValue(paletteState);
   const [baseColor, setBaseColor] = useRecoilState(baseColorState);
-  const [colorPickerOpen, setColorPickerOpen] = useState<boolean>(false);
+  // const [colorPickerOpen, setColorPickerOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const base = palette.colors.find((color) => color.isBaseColor);

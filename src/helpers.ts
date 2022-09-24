@@ -47,16 +47,16 @@ export const HSLToHex = (
   blue = Math.round((blue + m) * 255).toString(16);
 
   // Prepend 0s, if necessary
-  if (red.length == 1) red = "0" + red;
-  if (green.length == 1) green = "0" + green;
-  if (blue.length == 1) blue = "0" + blue;
+  if (red.length === 1) red = "0" + red;
+  if (green.length === 1) green = "0" + green;
+  if (blue.length === 1) blue = "0" + blue;
 
   return "#" + red + green + blue;
 };
 
 export const getAverage = (numbers: number[]) => {
   let sum = 0;
-  numbers.map((number, index) => (sum += number));
+  numbers.map((number) => (sum += number));
   return Math.floor(sum / numbers.length);
 };
 
@@ -114,7 +114,7 @@ export const generateMultipleColors = (
   needUnshift: boolean = false,
   paletteLenght: number = 5
 ) => {
-  const { hue, saturation, lightness } = baseColor;
+  const { hue } = baseColor;
 
   let colors = [baseColor];
   let currentIndex = 0;

@@ -1,3 +1,4 @@
+import { Toaster } from "react-hot-toast";
 import Router from "./Router";
 
 function App() {
@@ -7,6 +8,7 @@ function App() {
       {/* Helmet? */}
 
       <Router />
+      <Toaster position="top-center" containerClassName="m-10" />
     </>
   );
 }

@@ -1,17 +1,17 @@
 🎨 Color Palette Gernerator 👨‍🎨          
 
 🥅 Goals    
-[ ] Set Base Color   
+[x] Set Base Color    
 [x] Filter(Color Harmonies)  
 [x] Add Color  
 [x] Remove Color
-[x] Copy Hex Code on Click
-[ ] Notification         
-[ ] Color Picker        
-[ ] Move Color + drag and drop  
+[x] Copy Hex Code on Click          
+[x] Notification         
+[x] Color Picker        
 .     
 .       
 .        
+[ ] Move Color + drag and drop   
 [ ] Palette Explorer       
 [ ] Extract Color from Image        
 

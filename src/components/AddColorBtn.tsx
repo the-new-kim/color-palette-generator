@@ -45,7 +45,7 @@ function AddColorBtn({ isFirstChild, isLastChild, index }: IAddColorBtnProps) {
 
   return (
     <div
-      className={`group
+      className={`group z-10
       absolute top-0 bottom-0 m-auto flex justify-center items-center 
       ${isLastChild ? "right-0" : "left-0"} 
       ${!isFirstChild && !isLastChild && "translate-x-[-50%]"}
