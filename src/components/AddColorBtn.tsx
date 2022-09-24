@@ -12,9 +12,9 @@ function AddColorBtn({ isFirstChild, isLastChild, index }: IAddColorBtnProps) {
   const setPalette = useSetRecoilState(paletteState);
 
   const addColor = (btnIndex: number) => {
-    setPalette((oldPaletteState) => {
-      let newPalette = { ...oldPaletteState };
-      let colors = [...oldPaletteState.colors];
+    setPalette((oldPalette) => {
+      let newPalette = { ...oldPalette };
+      let colors = [...oldPalette.colors];
       const currentColor = isLastChild
         ? colors[btnIndex - 1]
         : colors[btnIndex];

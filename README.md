@@ -1,15 +1,23 @@
 🎨 Color Palette Gernerator 👨‍🎨          
 
+🥅 Goals    
 [ ] Set Base Color   
 [x] Filter(Color Harmonies)  
 [x] Add Color  
-[ ] Remove Color
+[x] Remove Color
+[x] Copy Hex Code on Click
+[ ] Notification         
+[ ] Color Picker        
 [ ] Move Color + drag and drop  
-[ ] Extract Color from Image ... if there is time...   
+.     
+.       
+.        
+[ ] Palette Explorer       
+[ ] Extract Color from Image        
 
-////////////////////////////////////////////////////////////////////          
+📝Memo
 
-📝 Color Harmonies      
+Color Harmonies:      
 Complementary  
 Triadic  
 Tetradic (60deg & 120deg)  
@@ -18,7 +26,7 @@ Analogous (30deg)
 Neutral (15deg)  
 Monochromatic          
 
-📝 Color Shades, Tints and Tones         
+Color Shades, Tints and Tones:         
 Shades (Adding Black: lightness ⬇️ )    
 Tints (Adding White: lightness ⬆️ )     
 Tones (Adding Gray: saturation ⬇️ lightness ⬆️)    
@@ -47,4 +55,4 @@ generateSinglColor()
     ⬇     
   DONE!     
 
-////////////////////////////////////////////////////////////////////       
+

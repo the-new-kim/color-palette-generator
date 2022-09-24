@@ -1,3 +1,6 @@
+import { MouseEvent } from "react";
+import { useSetRecoilState } from "recoil";
+import { paletteState } from "../atoms";
 import { HSLToHex } from "../helpers";
 import { IColor } from "../types";
 
@@ -8,6 +11,23 @@ interface IColorProps {
 
 function Color({ color, index }: IColorProps) {
   const { hue, saturation, lightness, isBaseColor } = color;
+  const setPalette = useSetRecoilState(paletteState);
+
+  const removeColor = (colorIndex: number) => {
+    setPalette((oldPalette) => {
+      let newPalette = { ...oldPalette };
+      let colors = [...oldPalette.colors];
+      colors.splice(colorIndex, 1);
+      newPalette = { ...newPalette, colors };
+      return newPalette;
+    });
+  };
+
+  const copyHexCode = (event: MouseEvent<HTMLLIElement>) => {
+    const target = event.target as HTMLLIElement;
+    const hexCode = target.innerText;
+    navigator.clipboard.writeText(hexCode);
+  };
 
   return (
     <div
@@ -23,11 +43,11 @@ function Color({ color, index }: IColorProps) {
     [&>*]:cursor-pointer [&>*]:mb-5
       "
       >
-        <li>X</li>
+        <li onClick={() => removeColor(index)}>X</li>
         <li>Move</li>
         <li>Color Picker</li>
-        <li>Copy Hex</li>
-        <li>{HSLToHex(hue, saturation, lightness)}</li>
+
+        <li onClick={copyHexCode}>{HSLToHex(hue, saturation, lightness)}</li>
         {isBaseColor && <li>⭐</li>}
       </ul>
     </div>

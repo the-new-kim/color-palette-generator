@@ -7,6 +7,8 @@ import Modal from "../components/Modal";
 import Palette from "../components/Palette";
 
 function Home() {
+  // pageTitle?
+
   const palette = useRecoilValue(paletteState);
   const [baseColor, setBaseColor] = useRecoilState(baseColorState);
   const [colorPickerOpen, setColorPickerOpen] = useState<boolean>(false);
