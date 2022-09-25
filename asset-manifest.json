@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/color-palette-generator/static/css/main.cfb50dac.css",
-    "main.js": "/color-palette-generator/static/js/main.3faf9ed9.js",
+    "main.css": "/color-palette-generator/static/css/main.e0af902b.css",
+    "main.js": "/color-palette-generator/static/js/main.92d912ab.js",
     "index.html": "/color-palette-generator/index.html",
-    "main.cfb50dac.css.map": "/color-palette-generator/static/css/main.cfb50dac.css.map",
-    "main.3faf9ed9.js.map": "/color-palette-generator/static/js/main.3faf9ed9.js.map"
+    "main.e0af902b.css.map": "/color-palette-generator/static/css/main.e0af902b.css.map",
+    "main.92d912ab.js.map": "/color-palette-generator/static/js/main.92d912ab.js.map"
   },
   "entrypoints": [
-    "static/css/main.cfb50dac.css",
-    "static/js/main.3faf9ed9.js"
+    "static/css/main.e0af902b.css",
+    "static/js/main.92d912ab.js"
   ]
 }
