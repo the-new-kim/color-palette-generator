@@ -64,7 +64,7 @@ export const generateSingleColor = ({
   hue,
   saturation,
   lightness,
-  isBaseColor,
+  isBaseColor = false,
 }: {
   hue?: number;
   saturation?: number | ESaturation;
@@ -76,8 +76,8 @@ export const generateSingleColor = ({
   }
 
   if (typeof saturation === "undefined") {
-    // 📝 Defualt : 40 ~ 100%  not too low
-    saturation = Math.floor(Math.random() * 80) + 20;
+    // 📝 Defualt : 10 ~ 100%  not too low
+    saturation = Math.floor(Math.random() * 90) + 10;
   }
   //
   else if (saturation === ESaturation.HIGH) {
@@ -91,8 +91,8 @@ export const generateSingleColor = ({
   // else .....get saturation directly as a number
 
   if (typeof lightness === "undefined") {
-    // 📝 Defualt : 20 ~ 80% not too dark not too bright
-    lightness = Math.floor(Math.random() * 60) + 20;
+    // 📝 Defualt : 10 ~ 90% not too dark not too bright
+    lightness = Math.floor(Math.random() * 80) + 10;
   }
   //
   else if (lightness === ELightness.LIGHT) {
@@ -111,12 +111,11 @@ export const generateSingleColor = ({
 export const generateMultipleColors = (
   baseColor: IColor,
   hueDegreePatterns: number[],
-  needUnshift: boolean = false,
   paletteLenght: number = 5
 ) => {
   const { hue } = baseColor;
 
-  let colors = [baseColor];
+  let colors = [];
   let currentIndex = 0;
   let currentHue = hue;
 
@@ -133,21 +132,21 @@ export const generateMultipleColors = (
       isBaseColor: false,
     });
 
-    needUnshift
-      ? i % 2 === 0
-        ? colors.push(color)
-        : colors.unshift(color)
-      : colors.push(color);
+    colors.push(color);
   }
-  // ⌚ Think about the changing position(index) of baseColor...
+
   return colors;
 };
 
 export const generatePalette = ({
   baseColor,
+  baseColorIndex = 0,
+  paletteLength = 5,
   colorHarmony,
 }: {
   baseColor?: IColor;
+  baseColorIndex?: number;
+  paletteLength?: number;
   colorHarmony?: EColorHarmonies;
 }) => {
   let colors: IColor[] = [];
@@ -169,20 +168,22 @@ export const generatePalette = ({
   harmonyName = EColorHarmonies[colorHarmony];
 
   if (colorHarmony === EColorHarmonies.COMPLEMENTARY) {
-    colors = generateMultipleColors(baseColor, [180], true);
+    colors = generateMultipleColors(baseColor, [180], paletteLength);
   } else if (colorHarmony === EColorHarmonies.TRIADIC) {
-    colors = generateMultipleColors(baseColor, [120]);
+    colors = generateMultipleColors(baseColor, [120], paletteLength);
   } else if (colorHarmony === EColorHarmonies.TETRIADIC) {
-    colors = generateMultipleColors(baseColor, [60, 120]);
+    colors = generateMultipleColors(baseColor, [60, 120], paletteLength);
   } else if (colorHarmony === EColorHarmonies.SQUARE) {
-    colors = generateMultipleColors(baseColor, [90]);
+    colors = generateMultipleColors(baseColor, [90], paletteLength);
   } else if (colorHarmony === EColorHarmonies.ANALOGOUS) {
-    colors = generateMultipleColors(baseColor, [30]);
+    colors = generateMultipleColors(baseColor, [30], paletteLength);
   } else if (colorHarmony === EColorHarmonies.NEUTRAL) {
-    colors = generateMultipleColors(baseColor, [15]);
+    colors = generateMultipleColors(baseColor, [15], paletteLength);
   } else if (colorHarmony === EColorHarmonies.MONOCHROMATIC) {
-    colors = generateMultipleColors(baseColor, [0]);
+    colors = generateMultipleColors(baseColor, [0], paletteLength);
   }
+
+  colors.splice(baseColorIndex, 0, baseColor);
 
   return { colors, harmonyName };
 };

@@ -1,10 +1,12 @@
-🎨 Color Palette Gernerator 👨‍🎨          
+🎨 Color Palette Gernerator 👨‍🎨      
+
+[LIVE](https://the-new-kim.github.io/color-palette-generator/)    
 
 🥅 Goals    
 [x] Set Base Color    
 [x] Filter(Color Harmonies)  
 [x] Add Color  
-[x] Remove Color
+[x] Remove Color        
 [x] Copy Hex Code on Click          
 [x] Notification         
 [x] Color Picker        

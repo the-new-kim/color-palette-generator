@@ -1,11 +1,14 @@
-import { MouseEvent, useEffect, useRef, useState } from "react";
-import { HslColor, HslColorPicker } from "react-colorful";
-import toast from "react-hot-toast";
 import { useSetRecoilState } from "recoil";
 import { paletteState } from "../atoms";
-import { HSLToHex } from "../helpers";
 import { IColor } from "../types";
+import { HSLToHex } from "../helpers";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { HslColor, HslColorPicker } from "react-colorful";
+import toast from "react-hot-toast";
+
+import { TbTrashX, TbColorPicker, TbX, TbCopy } from "react-icons/tb";
+import { AiOutlineStar, AiTwotoneStar } from "react-icons/ai";
 
 interface IColorProps {
   color: IColor;
@@ -21,7 +24,6 @@ function Color({ color, index }: IColorProps) {
   const togglePickerOpen = () => {
     setPickerOpen((prev) => !prev);
   };
-  const pickerBtnRef = useRef<HTMLLIElement>(null);
 
   useEffect(() => {
     setHsl({
@@ -58,9 +60,7 @@ function Color({ color, index }: IColorProps) {
     });
   };
 
-  const copyHexCode = (event: MouseEvent<HTMLLIElement>) => {
-    const target = event.target as HTMLLIElement;
-    const hexCode = target.innerText;
+  const copyHexCode = (hexCode: string) => {
     navigator.clipboard.writeText(hexCode);
     toast("Copied!");
   };
@@ -92,7 +92,7 @@ function Color({ color, index }: IColorProps) {
     togglePickerOpen();
   };
 
-  const setBaseColor = () => {
+  const changeBaseColor = () => {
     if (isBaseColor) return;
 
     setPalette((oldPalette) => {
@@ -122,40 +122,64 @@ function Color({ color, index }: IColorProps) {
     >
       <ul
         className="flex flex-col justify-end items-center flex-grow relative pb-10
-      opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out
-    [&>*]:cursor-pointer [&>*]:mb-5 
+      opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out
+
+    [&>li]:cursor-pointer [&>li]:mb-5 [&>li]:text-3xl [&>li]:relative [&>li]:z-10
+
+    [&>li]:before:absolute [&>li]:before:-top-[90%] [&>li]:before:left-full 
+    [&>li]:before:p-2 [&>li]:before:rounded-lg [&>li]:before:rounded-bl-none [&>li]:before:shadow-lg 
+
+    [&>li]:before:bg-white [&>li]:before:text-black [&>li]:before:text-sm [&>li]:before:whitespace-nowrap
+    [&>li]:before:opacity-0
+    [&>li]:before:transition-opacity [&>li]:before:duration-700 [&>li]:before:ease-out
       "
       >
         <li
-          className="flex flex-col justify-center items-center"
-          onClick={setBaseColor}
+          className="before:content-['remove'] hover:before:opacity-100"
+          onClick={removeColor}
         >
-          <div>Set as Base Color</div>
+          <TbTrashX />
         </li>
-
-        <li onClick={removeColor}>Remove</li>
         {/* <li>Move</li> */}
-        <li ref={pickerBtnRef} onClick={cancelChangeColor}>
-          Color Picker
+        <li
+          className="before:content-['color_picker'] hover:before:opacity-100"
+          onClick={cancelChangeColor}
+        >
+          <TbColorPicker />
         </li>
 
-        <li onClick={copyHexCode}>{HSLToHex(hue, saturation, lightness)}</li>
+        <li
+          className="before:content-['copy_hex_code'] hover:before:opacity-100"
+          onClick={() => copyHexCode(HSLToHex(hue, saturation, lightness))}
+        >
+          <TbCopy />
+        </li>
+        <li
+          className="before:content-['set_as_base_color'] hover:before:opacity-100"
+          onClick={changeBaseColor}
+        >
+          {isBaseColor ? (
+            <AiTwotoneStar className="!opacity-100" />
+          ) : (
+            <AiOutlineStar />
+          )}
+        </li>
       </ul>
       <AnimatePresence>
         {pickerOpen && (
           <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            exit={{ scale: 0 }}
-            className="absolute w-full h-full top-0 left-0 flex justify-center items-center pointer-events-none"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            className="z-20 absolute w-full h-full top-0 left-0 flex justify-center items-center pointer-events-none"
           >
-            <div className="z-20 relative flex flex-col bg-white rounded-xl shadow-xl pointer-events-auto">
+            <div className="relative flex flex-col bg-white rounded-xl shadow-xl pointer-events-auto">
               <div className="flex justify-end">
                 <button
                   onClick={cancelChangeColor}
-                  className="flex justify-center items-center p-3 w-8 h-8 text-black"
+                  className="flex justify-center items-center p-2 text-black text-xl"
                 >
-                  ❌
+                  <TbX />
                 </button>
               </div>
               <div className="px-6">
@@ -177,14 +201,14 @@ function Color({ color, index }: IColorProps) {
         )}
       </AnimatePresence>
 
-      {isBaseColor && (
+      {/* {isBaseColor && (
         <motion.div
-          className="z-20 absolute top-full left-0 right-0 m-auto w-full flex justify-center items-center"
+          className="z-20 absolute bottom-0 left-0 right-0 m-auto w-full flex justify-center items-center"
           layoutId="baseColor"
         >
           ⭐
         </motion.div>
-      )}
+      )} */}
     </div>
   );
 }
