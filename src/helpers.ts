@@ -51,7 +51,7 @@ export const HSLToHex = (
   if (green.length === 1) green = "0" + green;
   if (blue.length === 1) blue = "0" + blue;
 
-  return "#" + red + green + blue;
+  return red + green + blue;
 };
 
 export const getAverage = (numbers: number[]) => {

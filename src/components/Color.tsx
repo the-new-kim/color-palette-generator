@@ -64,7 +64,7 @@ function Color({ color, index, magic }: IColorProps) {
   };
 
   const copyHexCode = (hexCode: string) => {
-    navigator.clipboard.writeText(hexCode);
+    navigator.clipboard.writeText(`#${hexCode}`);
     toast("Copied!");
   };
 
