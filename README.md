@@ -1,60 +1,40 @@
-🎨 Color Palette Gernerator 👨‍🎨      
+# 🎨 Color Palette Gernerator 👨‍🎨
 
-[LIVE](https://the-new-kim.github.io/color-palette-generator/)    
+in progress...
 
-🥅 Goals    
-[x] Set Base Color    
-[x] Filter(Color Harmonies)  
-[x] Add Color  
-[x] Remove Color        
-[x] Copy Hex Code on Click          
-[x] Notification         
-[x] Color Picker        
-.     
-.       
-.        
-[ ] Move Color + drag and drop   
-[ ] Palette Explorer       
-[ ] Extract Color from Image        
+## [LIVE](https://the-new-kim.github.io/color-palette-generator/)
 
-📝Memo
+### 🥅 Goals
 
-Color Harmonies:      
-Complementary  
-Triadic  
-Tetradic (60deg & 120deg)  
-Square  
-Analogous (30deg)  
-Neutral (15deg)  
-Monochromatic          
+- [x] Set Base Color
+- [x] Filter(Color Harmonies)
+- [x] Add Color
+- [x] Remove Color
+- [x] Copy Hex Code on Click
+- [x] Notification
+- [x] Color Picker  
 
-Color Shades, Tints and Tones:         
-Shades (Adding Black: lightness ⬇️ )    
-Tints (Adding White: lightness ⬆️ )     
-Tones (Adding Gray: saturation ⬇️ lightness ⬆️)    
+- [ ] Move Color + drag and drop
+- [ ] Palette Explorer
+- [ ] Extract Color from Image
 
+### Color Harmonies:
 
-⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙    
-⚙ Generating process ⚙     
-⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙⚙     
+- Complementary
+- Triadic
+- Tetradic (60deg & 120deg)
+- Square
+- Analogous (30deg)
+- Neutral (15deg)
+- Monochromatic
 
-generatePalette()    
-    ⬇  
-?baseColor? no ➡ baseColor = generateSingleColor()   
-   yes        
-    ⬇  
-generateMultipleColors()    
-    ⬇  
-?colorHarmony? no ➡ create random colorHarmony     
-   yes    
-    ⬇     
-each colors(loop)    
-  ⬇ ⬇ ⬇     
-generateSinglColor()    
-    ⬇     
-?any filter for H,S,L? no ➡ random H,S,L    
-   yes    
-    ⬇     
-  DONE!     
+- Color Shades, Tints and Tones:
+- Shades (Adding Black: lightness ⬇️ )
+- Tints (Adding White: lightness ⬆️ )
+- Tones (Adding Gray: saturation ⬇️ lightness ⬆️)
 
+### Generate Helpers
 
+- generatePalette()
+- generateMultipleColors()
+- generateSinglColor()

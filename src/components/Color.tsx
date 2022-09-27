@@ -9,13 +9,16 @@ import toast from "react-hot-toast";
 
 import { TbTrashX, TbColorPicker, TbX, TbCopy } from "react-icons/tb";
 import { AiOutlineStar, AiTwotoneStar } from "react-icons/ai";
+import { BiMoveHorizontal } from "react-icons/bi";
+import { DraggableProvided } from "react-beautiful-dnd";
 
 interface IColorProps {
   color: IColor;
   index: number;
+  magic: DraggableProvided;
 }
 
-function Color({ color, index }: IColorProps) {
+function Color({ color, index, magic }: IColorProps) {
   const setPalette = useSetRecoilState(paletteState);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [hsl, setHsl] = useState<IColor>({ ...color });
@@ -140,7 +143,12 @@ function Color({ color, index }: IColorProps) {
         >
           <TbTrashX />
         </li>
-        {/* <li>Move</li> */}
+        <li
+          {...magic.dragHandleProps}
+          className="before:content-['drag'] hover:before:opacity-100 !cursor-grab"
+        >
+          <BiMoveHorizontal />
+        </li>
         <li
           className="before:content-['color_picker'] hover:before:opacity-100"
           onClick={cancelChangeColor}
@@ -188,6 +196,7 @@ function Color({ color, index }: IColorProps) {
                   onChange={changeBgColor}
                 />
               </div>
+
               <div className="flex justify-between px-6">
                 <button onClick={cancelChangeColor} className="p-2 text-black">
                   Cancel
