@@ -37,4 +37,4 @@ in progress...
 
 - generatePalette()
 - generateMultipleColors()
-- generateSinglColor()
+- generateSingleColor()
