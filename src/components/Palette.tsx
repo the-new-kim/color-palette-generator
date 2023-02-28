@@ -5,8 +5,8 @@ import {
   DropResult,
 } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
-import { paletteState } from "../atoms";
-import { HSLToHex } from "../helpers";
+import { paletteState } from "../libs/atoms";
+import { HSLToHex } from "../libs/helpers";
 import AddColorBtn from "./AddColorBtn";
 import Color from "./Color";
 
@@ -27,7 +27,7 @@ function Palette() {
   };
 
   return (
-    <div className="w-full flex flex-col items-center justify-center flex-grow">
+    <div className="w-full flex flex-col items-center justify-center flex-grow h-full">
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="palette" direction="horizontal">
           {(magic) => (

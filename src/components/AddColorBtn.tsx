@@ -1,6 +1,6 @@
 import { useSetRecoilState } from "recoil";
-import { paletteState } from "../atoms";
-import { getAverage } from "../helpers";
+import { paletteState } from "../libs/atoms";
+import { getAverage } from "../libs/helpers";
 
 import { TbPlus } from "react-icons/tb";
 

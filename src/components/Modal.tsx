@@ -1,23 +1,18 @@
-import { Dispatch, ReactNode } from "react";
+import { X } from "phosphor-react";
+import React, { ReactNode } from "react";
 
 interface IModalProps {
-  setState: Dispatch<boolean>;
-  child: ReactNode;
+  children: ReactNode;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function Modal({ setState, child }: IModalProps) {
+function Modal({ children, setShowModal }: IModalProps) {
   return (
     <div
-      onClick={() => {
-        setState(false);
-      }}
-      className="fixed top-0 left-0 w-screen h-screen bg-[rgba(0,0,0,0.5)]
-      flex justify-center items-center z-50
-      "
+      onClick={() => setShowModal(false)}
+      className="fixed top-0 left-0 right-0 bottom-0 m-auto w-full h-full flex justify-center items-center bg-[rgba(0,0,0,0.2)] z-50"
     >
-      <div className="flex justify-center items-center w-[50vw] h-[50vh] max-w-screen-md">
-        {child}
-      </div>
+      <div className="z-50 max-w-2xl">{children}</div>
     </div>
   );
 }

@@ -1,12 +1,12 @@
 import { useRecoilState } from "recoil";
-import { paletteState } from "../atoms";
-import { generatePalette } from "../helpers";
-import { EColorHarmonies, IColor } from "../types";
+import { paletteState } from "../libs/atoms";
+import { generatePalette } from "../libs/helpers";
+import { EColorHarmonies, IColor } from "../libs/types";
 import { ChangeEvent, useEffect, useState } from "react";
 
 import { MdOutlineKeyboardArrowUp } from "react-icons/md";
 
-function Filter() {
+function HarmonySelector() {
   const [palette, setPalette] = useRecoilState(paletteState);
   const [defaultSelectValue, setDefaultSelectValue] = useState(0);
   const [baseColor, setBaseColor] = useState<IColor>({
@@ -49,7 +49,7 @@ function Filter() {
           background: `hsl(${hue},${saturation}%,${lightness}%)`,
           color: lightness > 50 ? "black" : "white",
         }}
-        className="text-lg p-2 pr-10 rounded-xl shadow-md appearance-none"
+        className="p-2 pr-10 rounded-xl shadow-md appearance-none"
         value={defaultSelectValue}
       >
         {Object.keys(EColorHarmonies)
@@ -63,7 +63,7 @@ function Filter() {
       <span
         style={{ color: lightness > 50 ? "black" : "white" }}
         className="absolute flex justify-center items-center 
-        top-0 bottom-0 right-0 my-auto p-2 text-lg pointer-events-none"
+        top-0 bottom-0 right-0 my-auto p-2 pointer-events-none"
       >
         <MdOutlineKeyboardArrowUp />
       </span>
@@ -71,4 +71,4 @@ function Filter() {
   );
 }
 
-export default Filter;
+export default HarmonySelector;

@@ -1,7 +1,7 @@
 import { useSetRecoilState } from "recoil";
-import { paletteState } from "../atoms";
-import { IColor } from "../types";
-import { HSLToHex } from "../helpers";
+import { paletteState } from "../libs/atoms";
+import { IColor } from "../libs/types";
+import { HSLToHex } from "../libs/helpers";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { HslColor, HslColorPicker } from "react-colorful";
@@ -11,6 +11,7 @@ import { TbTrashX, TbColorPicker, TbX, TbCopy } from "react-icons/tb";
 import { AiOutlineStar, AiTwotoneStar } from "react-icons/ai";
 import { BiMoveHorizontal } from "react-icons/bi";
 import { DraggableProvided } from "react-beautiful-dnd";
+import { Trash } from "phosphor-react";
 
 interface IColorProps {
   color: IColor;
@@ -126,50 +127,48 @@ function Color({ color, index, magic }: IColorProps) {
       <ul
         className="flex flex-col justify-end items-center flex-grow relative pb-10
       opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out
-
-    [&>li]:cursor-pointer [&>li]:mb-5 [&>li]:text-3xl [&>li]:relative [&>li]:z-10
-
-    [&>li]:before:absolute [&>li]:before:-top-[90%] [&>li]:before:left-full 
-    [&>li]:before:p-2 [&>li]:before:rounded-lg [&>li]:before:rounded-bl-none [&>li]:before:shadow-lg 
-
-    [&>li]:before:bg-white [&>li]:before:text-black [&>li]:before:text-sm [&>li]:before:whitespace-nowrap
-    [&>li]:before:opacity-0
-    [&>li]:before:transition-opacity [&>li]:before:duration-700 [&>li]:before:ease-out
-      "
+      text-lg mg:text-xl lg:text-2xl
+      [&>li]:cursor-pointer [&>li]:p-3 [&>li]:mb-1 [&>li]:relative [&>li]:z-10"
       >
         <li
-          className="before:content-['remove'] hover:before:opacity-100"
+          // className="before:content-['remove'] hover:before:opacity-100"
+          data-hover-text="Remove"
           onClick={removeColor}
         >
-          <TbTrashX />
+          <Trash className="pointer-events-none" />
         </li>
         <li
           {...magic.dragHandleProps}
-          className="before:content-['drag'] hover:before:opacity-100 !cursor-grab"
+          data-hover-text="Drag"
+
+          // className="before:content-['drag'] hover:before:opacity-100 !cursor-grab"
         >
-          <BiMoveHorizontal />
+          <BiMoveHorizontal className="pointer-events-none" />
         </li>
         <li
-          className="before:content-['color_picker'] hover:before:opacity-100"
+          // className="before:content-['color_picker'] hover:before:opacity-100"
+          data-hover-text="Color picker"
           onClick={cancelChangeColor}
         >
-          <TbColorPicker />
+          <TbColorPicker className="pointer-events-none" />
         </li>
 
         <li
-          className="before:content-['copy_hex_code'] hover:before:opacity-100"
+          // className="before:content-['copy_hex_code'] hover:before:opacity-100"
+          data-hover-text="Hex code"
           onClick={() => copyHexCode(HSLToHex(hue, saturation, lightness))}
         >
-          <TbCopy />
+          <TbCopy className="pointer-events-none" />
         </li>
         <li
-          className="before:content-['set_as_base_color'] hover:before:opacity-100"
+          // className="before:content-['set_as_base_color'] hover:before:opacity-100"
+          data-hover-text="Set as base color"
           onClick={changeBaseColor}
         >
           {isBaseColor ? (
-            <AiTwotoneStar className="!opacity-100" />
+            <AiTwotoneStar className="!opacity-100 pointer-events-none" />
           ) : (
-            <AiOutlineStar />
+            <AiOutlineStar className="pointer-events-none" />
           )}
         </li>
       </ul>
@@ -179,7 +178,7 @@ function Color({ color, index, magic }: IColorProps) {
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            className="z-20 absolute w-full h-full top-0 left-0 flex justify-center items-center pointer-events-none"
+            className="z-20 fixed md:absolute w-full h-full top-0 left-0 flex justify-center items-center pointer-events-none"
           >
             <div className="relative flex flex-col bg-white rounded-xl shadow-xl pointer-events-auto">
               <div className="flex justify-end">
@@ -209,15 +208,6 @@ function Color({ color, index, magic }: IColorProps) {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* {isBaseColor && (
-        <motion.div
-          className="z-20 absolute bottom-0 left-0 right-0 m-auto w-full flex justify-center items-center"
-          layoutId="baseColor"
-        >
-          ⭐
-        </motion.div>
-      )} */}
     </div>
   );
 }
