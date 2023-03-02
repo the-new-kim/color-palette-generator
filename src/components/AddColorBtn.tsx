@@ -1,8 +1,9 @@
 import { useSetRecoilState } from "recoil";
 import { paletteState } from "../libs/atoms";
-import { getAverage } from "../libs/helpers";
+import { cls, createAverageColor, getAverage } from "../libs/utils";
 
 import { TbPlus } from "react-icons/tb";
+import usePaletteHistory from "../libs/hooks/usePaletteHistory";
 
 interface IAddColorBtnProps {
   isFirstChild?: boolean;
@@ -10,55 +11,50 @@ interface IAddColorBtnProps {
   index: number;
 }
 
-function AddColorBtn({ isFirstChild, isLastChild, index }: IAddColorBtnProps) {
-  const setPalette = useSetRecoilState(paletteState);
+function AddColorBtn({
+  isFirstChild = false,
+  isLastChild = false,
+  index,
+}: IAddColorBtnProps) {
+  const {
+    palette,
+    setPalette,
+    pastPalettes,
+    setPastPalettes,
+    futurePalettes,
+    setFuturePalettes,
+    isUndoPossible,
+    isRedoPossible,
+  } = usePaletteHistory();
 
-  const addColor = (btnIndex: number) => {
-    setPalette((oldPalette) => {
-      let newPalette = { ...oldPalette };
-      let colors = [...oldPalette.colors];
-      const currentColor = isLastChild
-        ? colors[btnIndex - 1]
-        : colors[btnIndex];
-      const comparisonColor = colors[btnIndex - 1]; // Unnecessary for isLastChild...
-
-      const hue =
-        !isFirstChild && !isLastChild
-          ? ((currentColor.hue + comparisonColor.hue) / 2) % 360 // ❓ NOT SURE ❓ Ignore saturation and lightness?
-          : currentColor.hue; ///////////////////////////////////// or compare the fist and last children?
-      const saturation = isFirstChild
-        ? Math.max(currentColor.saturation - 5, 0)
-        : isLastChild
-        ? Math.min(currentColor.saturation + 5, 100)
-        : getAverage([currentColor.saturation, comparisonColor.saturation]);
-      const lightness = isFirstChild
-        ? Math.max(currentColor.lightness - 5, 0)
-        : isLastChild
-        ? Math.min(currentColor.lightness + 5, 100)
-        : getAverage([currentColor.lightness, comparisonColor.lightness]);
-
-      const newColor = { hue, saturation, lightness };
-      colors.splice(btnIndex, 0, newColor);
-      newPalette = { ...newPalette, colors };
-
-      return newPalette;
-    });
+  const onClick = (btnIndex: number) => {
+    const newPallete = createAverageColor(
+      btnIndex,
+      palette,
+      isLastChild,
+      isFirstChild
+    );
+    setPastPalettes((prev) => [...prev, palette]);
+    setPalette(newPallete);
+    setFuturePalettes([]);
   };
 
   return (
     <div
-      className={`group z-10
+      className={cls(`group z-10
       absolute top-0 bottom-0 m-auto flex justify-center items-center 
       ${isLastChild ? "right-0" : "left-0"} 
       ${!isFirstChild && !isLastChild && "translate-x-[-50%]"}
-      `}
+      `)}
     >
       <div
         className="bg-white w-10 h-10 rounded-full flex justify-center items-center shadow-lg
-        opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out cursor-pointer"
-        onClick={() => addColor(index)}
+        opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out cursor-pointer pointer-events-auto"
+        onClick={() => onClick(index)}
+        data-hover-text="Add Color"
+        data-hover-text-left={isLastChild ? true : undefined}
       >
-        <TbPlus />
+        <TbPlus className="pointer-events-none" />
       </div>
     </div>
   );

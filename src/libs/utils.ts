@@ -1,4 +1,10 @@
-import { EColorHarmonies, ELightness, ESaturation, IColor } from "./types";
+import {
+  EColorHarmonies,
+  ELightness,
+  ESaturation,
+  IColor,
+  IPalette,
+} from "./types";
 
 //https://css-tricks.com/converting-color-spaces-in-javascript/
 export const HSLToHex = (
@@ -138,17 +144,22 @@ export const generateMultipleColors = (
   return colors;
 };
 
-export const generatePalette = ({
-  baseColor,
-  baseColorIndex = 0,
-  paletteLength = 5,
-  colorHarmony,
-}: {
-  baseColor?: IColor;
-  baseColorIndex?: number;
-  paletteLength?: number;
-  colorHarmony?: EColorHarmonies;
-}) => {
+// baseColor,
+// baseColorIndex = 0,
+// paletteLength = 5,
+// colorHarmony,
+
+// baseColor?: IColor;
+// baseColorIndex?: number;
+// paletteLength?: number;
+// colorHarmony?: EColorHarmonies;
+
+export const generatePalette = (
+  baseColor?: IColor,
+  baseColorIndex: number = 0,
+  paletteLength: number = 5,
+  colorHarmony?: EColorHarmonies
+) => {
   let colors: IColor[] = [];
   let harmonyName = "";
 
@@ -186,4 +197,87 @@ export const generatePalette = ({
   colors.splice(baseColorIndex, 0, baseColor);
 
   return { colors, harmonyName };
+};
+
+export const cls = (...classnames: string[]) => {
+  return classnames.join(" ");
+};
+
+export const makeFirstLetterBig = (text: string) => {
+  const firstLetter = text.charAt(0).toUpperCase();
+  const rest = text.slice(1).toLocaleLowerCase();
+
+  return firstLetter + rest;
+};
+
+export const loadFromLocalStorage = (key: string) => {
+  const loadedData = localStorage.getItem(key);
+  if (!loadedData) return null;
+
+  return JSON.parse(loadedData);
+};
+
+export const saveToLocalStorage = <T>(key: string, value: T) => {
+  localStorage.setItem(key, JSON.stringify(value));
+};
+
+export const increseNumber = (value: number, increament: number) => {
+  return value + increament;
+};
+
+export const createAverageColor = (
+  btnIndex: number,
+  oldPalette: IPalette,
+  isLastChild: boolean,
+  isFirstChild: boolean
+) => {
+  let newPalette = { ...oldPalette };
+  let colors = [...oldPalette.colors];
+  const currentColor = isLastChild ? colors[btnIndex - 1] : colors[btnIndex];
+  const comparisonColor = colors[btnIndex - 1]; // Unnecessary for isLastChild...
+
+  const hue =
+    !isFirstChild && !isLastChild
+      ? ((currentColor.hue + comparisonColor.hue) / 2) % 360 // ❓ NOT SURE ❓ Ignore saturation and lightness?
+      : currentColor.hue; ///////////////////////////////////// or compare the fist and last children?
+  const saturation = isFirstChild
+    ? Math.max(currentColor.saturation - 5, 0)
+    : isLastChild
+    ? Math.min(currentColor.saturation + 5, 100)
+    : getAverage([currentColor.saturation, comparisonColor.saturation]);
+  const lightness = isFirstChild
+    ? Math.max(currentColor.lightness - 5, 0)
+    : isLastChild
+    ? Math.min(currentColor.lightness + 5, 100)
+    : getAverage([currentColor.lightness, comparisonColor.lightness]);
+
+  const newColor = { hue, saturation, lightness };
+  colors.splice(btnIndex, 0, newColor);
+  newPalette = { ...newPalette, colors };
+
+  return newPalette;
+};
+
+export const removeColor = (index: number, oldPalette: IPalette) => {
+  let newPalette = { ...oldPalette };
+  let colors = [...oldPalette.colors];
+
+  if (colors[index].isBaseColor) {
+    const newBaseColorIndex = !colors[index + 1]
+      ? index - 1
+      : !colors[index - 1]
+      ? index + 1
+      : index + 1;
+
+    const newBaseColor = {
+      ...colors[newBaseColorIndex],
+      isBaseColor: true,
+    };
+
+    colors.splice(newBaseColorIndex, 1, newBaseColor);
+  }
+
+  colors.splice(index, 1);
+  newPalette = { ...newPalette, colors };
+  return newPalette;
 };

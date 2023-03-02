@@ -1,29 +1,42 @@
-import { useSetRecoilState } from "recoil";
-import { paletteState } from "../libs/atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { navHeightState, paletteState } from "../libs/atoms";
 import { IColor } from "../libs/types";
-import { HSLToHex } from "../libs/helpers";
+import { cls, HSLToHex, removeColor } from "../libs/utils";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { HslColor, HslColorPicker } from "react-colorful";
 import toast from "react-hot-toast";
 
-import { TbTrashX, TbColorPicker, TbX, TbCopy } from "react-icons/tb";
+import { TbColorPicker, TbX, TbCopy } from "react-icons/tb";
 import { AiOutlineStar, AiTwotoneStar } from "react-icons/ai";
 import { BiMoveHorizontal } from "react-icons/bi";
 import { DraggableProvided } from "react-beautiful-dnd";
 import { Trash } from "phosphor-react";
+import usePaletteHistory from "../libs/hooks/usePaletteHistory";
 
 interface IColorProps {
   color: IColor;
   index: number;
   magic: DraggableProvided;
+  isLastChild?: boolean;
 }
 
-function Color({ color, index, magic }: IColorProps) {
-  const setPalette = useSetRecoilState(paletteState);
+function Color({ color, index, magic, isLastChild = false }: IColorProps) {
+  const {
+    palette,
+    setPalette,
+    pastPalettes,
+    setPastPalettes,
+    futurePalettes,
+    setFuturePalettes,
+    isUndoPossible,
+    isRedoPossible,
+  } = usePaletteHistory();
+
   const [pickerOpen, setPickerOpen] = useState(false);
   const [hsl, setHsl] = useState<IColor>({ ...color });
   const { hue, saturation, lightness, isBaseColor } = hsl;
+  const navHeight = useRecoilValue(navHeightState);
 
   const togglePickerOpen = () => {
     setPickerOpen((prev) => !prev);
@@ -38,30 +51,11 @@ function Color({ color, index, magic }: IColorProps) {
     });
   }, [color, index]);
 
-  const removeColor = () => {
-    setPalette((oldPalette) => {
-      let newPalette = { ...oldPalette };
-      let colors = [...oldPalette.colors];
-
-      if (colors[index].isBaseColor) {
-        const newBaseColorIndex = !colors[index + 1]
-          ? index - 1
-          : !colors[index - 1]
-          ? index + 1
-          : index + 1;
-
-        const newBaseColor = {
-          ...colors[newBaseColorIndex],
-          isBaseColor: true,
-        };
-
-        colors.splice(newBaseColorIndex, 1, newBaseColor);
-      }
-
-      colors.splice(index, 1);
-      newPalette = { ...newPalette, colors };
-      return newPalette;
-    });
+  const onRemoveClick = () => {
+    const newPallete = removeColor(index, palette);
+    setPastPalettes((prev) => [...prev, palette]);
+    setPalette(newPallete);
+    setFuturePalettes([]);
   };
 
   const copyHexCode = (hexCode: string) => {
@@ -85,14 +79,16 @@ function Color({ color, index, magic }: IColorProps) {
   };
 
   const saveChangeColor = () => {
-    setPalette((oldPalette) => {
-      let newPalette = { ...oldPalette };
-      let colors = [...oldPalette.colors];
-      const newColor = { ...hsl };
-      colors.splice(index, 1, newColor);
-      newPalette = { ...newPalette, colors };
-      return newPalette;
-    });
+    let newPalette = { ...palette };
+    let colors = [...palette.colors];
+    const newColor = { ...hsl };
+    colors.splice(index, 1, newColor);
+    newPalette = { ...newPalette, colors };
+
+    setPastPalettes((prev) => [...prev, palette]);
+    setPalette(newPalette);
+    setFuturePalettes([]);
+
     togglePickerOpen();
   };
 
@@ -118,51 +114,59 @@ function Color({ color, index, magic }: IColorProps) {
 
   return (
     <div
-      className="group relative flex-grow flex flex-col justify-center items-center"
-      style={{
-        background: `hsl(${hue},${saturation}%,${lightness}%)`,
-        color: lightness > 50 ? "black" : "white",
-      }}
+      className={
+        "group relative flex-grow flex flex-col justify-center items-center " +
+        cls(lightness > 50 ? "text-black" : "text-white")
+      }
     >
+      <div
+        className="absolute top-0 left-0 bottom-0 right-0 m-auto w-full h-[200%] !-z-50"
+        style={{
+          background: `hsl(${hue},${saturation}%,${lightness}%)`,
+        }}
+      />
       <ul
         className="flex flex-col justify-end items-center flex-grow relative pb-10
       opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out
-      text-lg mg:text-xl lg:text-2xl
       [&>li]:cursor-pointer [&>li]:p-3 [&>li]:mb-1 [&>li]:relative [&>li]:z-10"
+        style={{
+          transform: `translateY(${-navHeight}px)`,
+        }}
       >
         <li
-          // className="before:content-['remove'] hover:before:opacity-100"
           data-hover-text="Remove"
-          onClick={removeColor}
+          data-hover-text-left={isLastChild ? true : undefined}
+          onClick={onRemoveClick}
         >
           <Trash className="pointer-events-none" />
         </li>
         <li
           {...magic.dragHandleProps}
+          data-hover-text-left={isLastChild ? true : undefined}
           data-hover-text="Drag"
-
-          // className="before:content-['drag'] hover:before:opacity-100 !cursor-grab"
+          style={{ cursor: "grab" }}
+          // className="!cursor-grab pointer-events-auto"
         >
           <BiMoveHorizontal className="pointer-events-none" />
         </li>
         <li
-          // className="before:content-['color_picker'] hover:before:opacity-100"
           data-hover-text="Color picker"
+          data-hover-text-left={isLastChild ? true : undefined}
           onClick={cancelChangeColor}
         >
           <TbColorPicker className="pointer-events-none" />
         </li>
 
         <li
-          // className="before:content-['copy_hex_code'] hover:before:opacity-100"
           data-hover-text="Hex code"
+          data-hover-text-left={isLastChild ? true : undefined}
           onClick={() => copyHexCode(HSLToHex(hue, saturation, lightness))}
         >
           <TbCopy className="pointer-events-none" />
         </li>
         <li
-          // className="before:content-['set_as_base_color'] hover:before:opacity-100"
           data-hover-text="Set as base color"
+          data-hover-text-left={isLastChild ? true : undefined}
           onClick={changeBaseColor}
         >
           {isBaseColor ? (

@@ -6,24 +6,36 @@ import {
 } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import { paletteState } from "../libs/atoms";
-import { HSLToHex } from "../libs/helpers";
+import usePaletteHistory from "../libs/hooks/usePaletteHistory";
+
+import { HSLToHex } from "../libs/utils";
 import AddColorBtn from "./AddColorBtn";
 import Color from "./Color";
 
 function Palette() {
-  const [palette, setPalette] = useRecoilState(paletteState);
+  const {
+    palette,
+    setPalette,
+    pastPalettes,
+    setPastPalettes,
+    futurePalettes,
+    setFuturePalettes,
+    isUndoPossible,
+    isRedoPossible,
+  } = usePaletteHistory();
 
   const onDragEnd = ({ destination, source }: DropResult) => {
     if (!destination || destination.index === source.index) return;
 
-    setPalette((oldPalette) => {
-      const colors = [...oldPalette.colors];
-      const draggingColor = colors[source.index];
-      colors.splice(source.index, 1);
-      colors.splice(destination.index, 0, draggingColor);
-      const newPalette = { ...oldPalette, colors };
-      return newPalette;
-    });
+    const colors = [...palette.colors];
+    const draggingColor = colors[source.index];
+    colors.splice(source.index, 1);
+    colors.splice(destination.index, 0, draggingColor);
+    const newPalette = { ...palette, colors };
+
+    setPastPalettes((prev) => [...prev, palette]);
+    setPalette(newPalette);
+    setFuturePalettes([]);
   };
 
   return (
@@ -58,7 +70,12 @@ function Palette() {
                       ) : (
                         <AddColorBtn index={index} />
                       )}
-                      <Color index={index} color={color} magic={magic} />
+                      <Color
+                        index={index}
+                        color={color}
+                        magic={magic}
+                        isLastChild={palette.colors.length - 1 === index}
+                      />
                       {index === palette.colors.length - 1 && (
                         <AddColorBtn
                           index={palette.colors.length}

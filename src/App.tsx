@@ -1,23 +1,45 @@
 import { Toaster } from "react-hot-toast";
-import CursorFollower from "./components/CursorFollower";
+import HoverText from "./components/HoverText";
+import { Helmet } from "react-helmet";
 
-import Footer from "./components/Footer";
-import Header from "./components/Header";
 import Palette from "./components/Palette";
+import Nav from "./components/Nav";
+import { useRecoilValue } from "recoil";
+import { paletteState } from "./libs/atoms";
+import { useEffect } from "react";
+import usePaletteHistory from "./libs/hooks/usePaletteHistory";
 
 function App() {
+  const {
+    palette,
+    setPalette,
+    pastPalettes,
+    setPastPalettes,
+    futurePalettes,
+    setFuturePalettes,
+    isUndoPossible,
+    isRedoPossible,
+  } = usePaletteHistory();
+
+  useEffect(() => {
+    // onUpdate();
+    console.log(palette);
+    console.log("PAST:::", pastPalettes);
+    console.log("FUTURE:::", futurePalettes);
+  }, [palette]);
+
   return (
-    <>
-      <div className="relative flex flex-col w-full h-screen overflow-x-hidden">
-        <Header />
-        <main className="flex-grow">
-          <Palette />
-        </main>
-        <Footer />
-      </div>
+    <div className="text-lg mg:text-xl lg:text-2xl">
+      <Helmet>
+        <title>Color palette generagtro</title>
+      </Helmet>
+      <main className="fixed top-0 left-0 flex w-full h-screen overflow-hidden">
+        <Palette />
+      </main>
+      <Nav />
       <Toaster position="top-center" containerClassName="m-10" />
-      <CursorFollower />
-    </>
+      <HoverText />
+    </div>
   );
 }
 

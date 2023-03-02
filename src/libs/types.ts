@@ -31,3 +31,14 @@ export interface IPalette {
   colors: IColor[];
   harmonyName: string;
 }
+
+export interface ILocalstorageHistory {
+  currentIndex: number;
+  palettes: IPalette[];
+}
+
+export interface IPaletteHistory {
+  past: IPalette[];
+  current: IPalette | null;
+  future: IPalette[];
+}

@@ -1,10 +1,12 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import useMousePosition from "../libs/hooks/useMousePosition";
 import { AnimatePresence, motion } from "framer-motion";
+import { cls } from "../libs/utils";
 
-export default function CursorFollower() {
+export default function HoverText() {
   const { x, y } = useMousePosition();
   const [hoverText, setHoverText] = useState<string>();
+  const [textLeft, setTextLeft] = useState(false);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -13,9 +15,11 @@ export default function CursorFollower() {
       const target = event.target as HTMLElement;
 
       const isPointer = window.getComputedStyle(target)["cursor"] === "pointer";
+      const isGrab = window.getComputedStyle(target)["cursor"] === "grab";
 
-      if (isPointer) {
+      if (isPointer || isGrab) {
         setHoverText(target.dataset.hoverText);
+        setTextLeft(target.dataset.hoverTextLeft ? true : false);
       } else {
         setHoverText(undefined);
       }
@@ -52,9 +56,20 @@ export default function CursorFollower() {
               delay: 0.1,
             },
           }}
-          className="bg-gradient-to-b from-slate-100 to-white text-sm fixed top-5 left-5 z-50 pointer-events-none rounded-xl p-2 rounded-tl-none shadow-lg"
+          className="fixed top-0 left-0 z-[50000]"
         >
-          {hoverText}
+          <div
+            className={
+              "absolute bg-gradient-to-b from-slate-100 to-white text-sm pointer-events-none rounded-xl p-2 shadow-lg whitespace-nowrap -top-3 -translate-y-[100%] " +
+              cls(
+                textLeft
+                  ? "rounded-br-none -translate-x-[100%] -left-3"
+                  : "rounded-bl-none left-3"
+              )
+            }
+          >
+            {hoverText}
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
