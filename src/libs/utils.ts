@@ -1,5 +1,5 @@
 import {
-  EColorHarmonies,
+  EGernerateMethods,
   ELightness,
   ESaturation,
   IColor,
@@ -66,27 +66,20 @@ export const getAverage = (numbers: number[]) => {
   return Math.floor(sum / numbers.length);
 };
 
-export const generateSingleColor = ({
-  hue,
-  saturation,
-  lightness,
-  isBaseColor = false,
-}: {
+interface IGernarateSinglColorVariables {
   hue?: number;
   saturation?: number | ESaturation;
   lightness?: number | ELightness;
   isBaseColor: boolean;
-}) => {
-  if (typeof hue === "undefined") {
-    hue = Math.floor(Math.random() * 360);
-  }
+}
 
-  if (typeof saturation === "undefined") {
-    // 📝 Defualt : 10 ~ 100%  not too low
-    saturation = Math.floor(Math.random() * 90) + 10;
-  }
-  //
-  else if (saturation === ESaturation.HIGH) {
+export const generateSingleColor = ({
+  hue = Math.floor(Math.random() * 360),
+  saturation = Math.floor(Math.random() * 90) + 10, // 📝 Defualt : 10 ~ 100%  not too low
+  lightness = Math.floor(Math.random() * 80) + 10, // 📝 Defualt : 10 ~ 90% not too dark not too bright
+  isBaseColor = false,
+}: IGernarateSinglColorVariables) => {
+  if (saturation === ESaturation.HIGH) {
     saturation = Math.floor(Math.random() * 33) + 67; // 66 ~ 100
   } else if (saturation === ESaturation.MIDDLE) {
     saturation = Math.floor(Math.random() * 32) + 33; // 34 ~ 65
@@ -94,22 +87,13 @@ export const generateSingleColor = ({
     saturation = Math.floor(Math.random() * 33); // 0 ~ 33
   }
 
-  // else .....get saturation directly as a number
-
-  if (typeof lightness === "undefined") {
-    // 📝 Defualt : 10 ~ 90% not too dark not too bright
-    lightness = Math.floor(Math.random() * 80) + 10;
-  }
-  //
-  else if (lightness === ELightness.LIGHT) {
+  if (lightness === ELightness.LIGHT) {
     lightness = Math.floor(Math.random() * 20) + 60; // 60 ~ 80
   } else if (lightness === ELightness.MEDIUM) {
     lightness = Math.floor(Math.random() * 20) + 40; // 40 ~ 60
   } else if (lightness === ELightness.DARK) {
     lightness = Math.floor(Math.random() * 20) + 20; // 20 ~ 40
   }
-
-  // else .....get lightness directly as a number
 
   return { hue, saturation, lightness, isBaseColor };
 };
@@ -144,59 +128,48 @@ export const generateMultipleColors = (
   return colors;
 };
 
-// baseColor,
-// baseColorIndex = 0,
-// paletteLength = 5,
-// colorHarmony,
+export const getRandomGernateMethodValue = () => {
+  const keys = Object.keys(EGernerateMethods).filter((key) =>
+    isNaN(Number(key))
+  );
 
-// baseColor?: IColor;
-// baseColorIndex?: number;
-// paletteLength?: number;
-// colorHarmony?: EColorHarmonies;
+  return Math.floor(Math.random() * keys.length);
+};
 
 export const generatePalette = (
-  baseColor?: IColor,
+  baseColor: IColor = generateSingleColor({ isBaseColor: true }),
   baseColorIndex: number = 0,
   paletteLength: number = 5,
-  colorHarmony?: EColorHarmonies
+  generateMethodValue: EGernerateMethods = getRandomGernateMethodValue()
 ) => {
   let colors: IColor[] = [];
-  let harmonyName = "";
+  let generateMethod;
 
-  if (typeof baseColor === "undefined") {
-    baseColor = generateSingleColor({ isBaseColor: true });
-  }
+  console.log("BASE COLOR:", baseColor);
 
-  if (typeof colorHarmony === "undefined") {
-    const keys = Object.keys(EColorHarmonies).filter((key) =>
-      isNaN(Number(key))
-    );
-    const length = keys.length;
-    const randomIndex = Math.floor(Math.random() * length);
-    colorHarmony = randomIndex;
-  }
+  generateMethod = EGernerateMethods[generateMethodValue];
 
-  harmonyName = EColorHarmonies[colorHarmony];
-
-  if (colorHarmony === EColorHarmonies.COMPLEMENTARY) {
+  if (generateMethodValue === EGernerateMethods.COMPLEMENTARY) {
     colors = generateMultipleColors(baseColor, [180], paletteLength);
-  } else if (colorHarmony === EColorHarmonies.TRIADIC) {
+  } else if (generateMethodValue === EGernerateMethods.TRIADIC) {
     colors = generateMultipleColors(baseColor, [120], paletteLength);
-  } else if (colorHarmony === EColorHarmonies.TETRIADIC) {
+  } else if (generateMethodValue === EGernerateMethods.TETRIADIC) {
     colors = generateMultipleColors(baseColor, [60, 120], paletteLength);
-  } else if (colorHarmony === EColorHarmonies.SQUARE) {
+  } else if (generateMethodValue === EGernerateMethods.SQUARE) {
     colors = generateMultipleColors(baseColor, [90], paletteLength);
-  } else if (colorHarmony === EColorHarmonies.ANALOGOUS) {
+  } else if (generateMethodValue === EGernerateMethods.ANALOGOUS) {
     colors = generateMultipleColors(baseColor, [30], paletteLength);
-  } else if (colorHarmony === EColorHarmonies.NEUTRAL) {
+  } else if (generateMethodValue === EGernerateMethods.NEUTRAL) {
     colors = generateMultipleColors(baseColor, [15], paletteLength);
-  } else if (colorHarmony === EColorHarmonies.MONOCHROMATIC) {
+  } else if (generateMethodValue === EGernerateMethods.MONOCHROMATIC) {
     colors = generateMultipleColors(baseColor, [0], paletteLength);
   }
 
   colors.splice(baseColorIndex, 0, baseColor);
 
-  return { colors, harmonyName };
+  console.log("COLORS:::", colors);
+
+  return { colors, generateMethod };
 };
 
 export const cls = (...classnames: string[]) => {

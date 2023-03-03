@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { futurePalettesState, paletteState, pastPalettesState } from "../atoms";
 
@@ -7,8 +8,29 @@ export default function usePaletteHistory() {
   const [futurePalettes, setFuturePalettes] =
     useRecoilState(futurePalettesState);
 
-  const isUndoPossible = () => pastPalettes.length > 0;
-  const isRedoPossible = () => futurePalettes.length > 0;
+  const [baseColor, setBaseColor] = useState(
+    palette.colors.find((color) => color.isBaseColor)
+  );
+  const [baseColorIndex, setBaseColorIndex] = useState(
+    palette.colors.findIndex((color) => color.isBaseColor)
+  );
+
+  const checkIsUndoPossible = () => pastPalettes.length > 0;
+  const checkIsRedoPossible = () => futurePalettes.length > 0;
+
+  const [isUndoPossible, setIsUndoPossble] = useState(checkIsUndoPossible());
+  const [isRedoPossible, setISRedoPossible] = useState(checkIsRedoPossible());
+
+  // const getBaseColor = () => palette.colors.find((color) => color.isBaseColor);
+  // const getBaseColorIndex = () =>
+  //   palette.colors.findIndex((color) => color.isBaseColor);
+
+  useEffect(() => {
+    setBaseColor(palette.colors.find((color) => color.isBaseColor));
+    setBaseColorIndex(palette.colors.findIndex((color) => color.isBaseColor));
+    setIsUndoPossble(checkIsUndoPossible());
+    setISRedoPossible(checkIsRedoPossible());
+  }, [palette]);
 
   return {
     palette,
@@ -19,5 +41,7 @@ export default function usePaletteHistory() {
     setFuturePalettes,
     isUndoPossible,
     isRedoPossible,
+    baseColor,
+    baseColorIndex,
   };
 }

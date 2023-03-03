@@ -14,9 +14,11 @@ in progress...
 - [x] Notification
 - [x] Color Picker  
 
-- [ ] Move Color + drag and drop
+- [x] Move Color + drag and drop
 - [ ] Palette Explorer
 - [ ] Extract Color from Image
+- [x] Undo & Redo
+- [ ] Keyboard shortcuts
 
 ### Color Harmonies:
 

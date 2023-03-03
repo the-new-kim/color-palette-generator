@@ -6,12 +6,8 @@ import {
   Camera,
 } from "phosphor-react";
 import { useEffect, useRef, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import {
-  baseColorIndexState,
-  baseColorState,
-  navHeightState,
-} from "../libs/atoms";
+import { useSetRecoilState } from "recoil";
+import { navHeightState } from "../libs/atoms";
 import usePaletteHistory from "../libs/hooks/usePaletteHistory";
 
 import useElementSize from "../libs/hooks/userElementSize";
@@ -33,11 +29,6 @@ export default function Nav() {
     isRedoPossible,
   } = usePaletteHistory();
 
-  const [baseColorIndex, setBaseColorIndex] =
-    useRecoilState(baseColorIndexState);
-
-  const [baseColor, setBaseColor] = useRecoilState(baseColorState);
-
   const navRef = useRef<HTMLElement>(null);
   const size = useElementSize(navRef);
 
@@ -54,17 +45,12 @@ export default function Nav() {
   };
 
   const onRandomClick = () => {
-    // setPastPalettes((prev) => [...prev, palette]);
-    // setFuturePalettes([]);
-    // const newPalette = generatePalette();
-    // setPalette(newPalette);
-
     setPastPalettes((prev) => [...prev, palette]);
     setFuturePalettes([]);
 
     setPalette(
       generatePalette(
-        baseColor,
+        palette.colors.find((color) => color.isBaseColor),
         palette.colors.findIndex((color) => color.isBaseColor),
         palette.colors.length
       )
@@ -72,7 +58,7 @@ export default function Nav() {
   };
 
   const onUndoClick = () => {
-    if (!isUndoPossible()) return;
+    if (!isUndoPossible) return;
 
     setFuturePalettes((prev) => [palette, ...prev]);
     setPalette(pastPalettes[pastPalettes.length - 1]);
@@ -80,7 +66,7 @@ export default function Nav() {
   };
 
   const onRedoClick = () => {
-    if (!isRedoPossible()) return;
+    if (!isRedoPossible) return;
 
     setPastPalettes((prev) => [...prev, palette]);
     setPalette(futurePalettes[0]);
@@ -94,22 +80,31 @@ export default function Nav() {
         className="fixed bottom-0 left-0 z-[10000] w-full bg-white p-5"
       >
         <ul className="flex items-center [&>*]:mr-3 [&>*]:cursor-pointer">
-          <li data-hover-text="Undo" onClick={onUndoClick}>
+          <li
+            data-hover-text="Undo"
+            onClick={onUndoClick}
+            style={{ opacity: isUndoPossible ? 1 : 0.5 }}
+          >
             <ArrowArcLeft className="pointer-events-none" />
           </li>
-          <li data-hover-text="Redo" onClick={onRedoClick}>
+          <li
+            data-hover-text="Redo"
+            onClick={onRedoClick}
+            style={{ opacity: isRedoPossible ? 1 : 0.5 }}
+          >
             <ArrowArcRight className="pointer-events-none" />
           </li>
-          <li data-hover-text="Photo">
+          <li data-hover-text="Create palette from photo">
             <Camera className="pointer-events-none" />
           </li>
+
           <li
             data-hover-text="Generate method"
             onClick={toggleShowGenerateMethod}
           >
             <Aperture className="pointer-events-none" />
           </li>
-          <li data-hover-text="Generate random colors" onClick={onRandomClick}>
+          <li data-hover-text="Random palette" onClick={onRandomClick}>
             <ArrowsClockwise className="pointer-events-none" />
           </li>
         </ul>

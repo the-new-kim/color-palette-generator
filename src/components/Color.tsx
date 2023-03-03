@@ -1,5 +1,5 @@
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { navHeightState, paletteState } from "../libs/atoms";
+import { useRecoilValue } from "recoil";
+import { navHeightState } from "../libs/atoms";
 import { IColor } from "../libs/types";
 import { cls, HSLToHex, removeColor } from "../libs/utils";
 import { useEffect, useState } from "react";

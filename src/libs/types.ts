@@ -1,4 +1,4 @@
-export enum EColorHarmonies {
+export enum EGernerateMethods {
   COMPLEMENTARY,
   TRIADIC,
   TETRIADIC,
@@ -29,7 +29,7 @@ export interface IColor {
 
 export interface IPalette {
   colors: IColor[];
-  harmonyName: string;
+  generateMethod: string;
 }
 
 export interface ILocalstorageHistory {

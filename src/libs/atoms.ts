@@ -21,17 +21,3 @@ export const navHeightState = atom<number>({
   key: "navHeightState",
   default: 0,
 });
-
-export const baseColorState = atom<IColor>({
-  key: "baseColorState",
-  default: {
-    hue: 0,
-    saturation: 0,
-    lightness: 0,
-  },
-});
-
-export const baseColorIndexState = atom<number>({
-  key: "baseColorIndexState",
-  default: 0,
-});
