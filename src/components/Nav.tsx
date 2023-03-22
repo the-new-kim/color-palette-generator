@@ -94,7 +94,7 @@ export default function Nav() {
           >
             <ArrowArcRight className="pointer-events-none" />
           </li>
-          <li data-hover-text="Create palette from photo">
+          <li data-hover-text="Coming soon!!">
             <Camera className="pointer-events-none" />
           </li>
 

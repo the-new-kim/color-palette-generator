@@ -145,8 +145,6 @@ export const generatePalette = (
   let colors: IColor[] = [];
   let generateMethod;
 
-  console.log("BASE COLOR:", baseColor);
-
   generateMethod = EGernerateMethods[generateMethodValue];
 
   if (generateMethodValue === EGernerateMethods.COMPLEMENTARY) {
@@ -166,8 +164,6 @@ export const generatePalette = (
   }
 
   colors.splice(baseColorIndex, 0, baseColor);
-
-  console.log("COLORS:::", colors);
 
   return { colors, generateMethod };
 };

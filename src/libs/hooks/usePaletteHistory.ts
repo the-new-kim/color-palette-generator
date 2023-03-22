@@ -21,10 +21,6 @@ export default function usePaletteHistory() {
   const [isUndoPossible, setIsUndoPossble] = useState(checkIsUndoPossible());
   const [isRedoPossible, setISRedoPossible] = useState(checkIsRedoPossible());
 
-  // const getBaseColor = () => palette.colors.find((color) => color.isBaseColor);
-  // const getBaseColorIndex = () =>
-  //   palette.colors.findIndex((color) => color.isBaseColor);
-
   useEffect(() => {
     setBaseColor(palette.colors.find((color) => color.isBaseColor));
     setBaseColorIndex(palette.colors.findIndex((color) => color.isBaseColor));

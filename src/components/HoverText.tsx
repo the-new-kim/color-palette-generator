@@ -1,7 +1,7 @@
-import { useLayoutEffect, useRef, useState } from "react";
-import useMousePosition from "../libs/hooks/useMousePosition";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cls } from "../libs/utils";
+import { useMousePosition } from "@kims-hooks/use-mouse-position";
 
 export default function HoverText() {
   const { x, y } = useMousePosition();
@@ -10,7 +10,7 @@ export default function HoverText() {
 
   const ref = useRef<HTMLDivElement>(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const handleMouseOver = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
 

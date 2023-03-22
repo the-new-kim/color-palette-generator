@@ -10,24 +10,6 @@ import { useEffect } from "react";
 import usePaletteHistory from "./libs/hooks/usePaletteHistory";
 
 function App() {
-  const {
-    palette,
-    setPalette,
-    pastPalettes,
-    setPastPalettes,
-    futurePalettes,
-    setFuturePalettes,
-    isUndoPossible,
-    isRedoPossible,
-  } = usePaletteHistory();
-
-  useEffect(() => {
-    // onUpdate();
-    console.log(palette);
-    console.log("PAST:::", pastPalettes);
-    console.log("FUTURE:::", futurePalettes);
-  }, [palette]);
-
   return (
     <div className="text-lg mg:text-xl lg:text-2xl">
       <Helmet>
