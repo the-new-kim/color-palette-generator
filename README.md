@@ -8,8 +8,8 @@
 `Tailwind CSS`
 `Tanstack query`
 
-[English](#en)
-[한국어](#kr)
+- [English](#en)
+- [한국어](#kr)
 
 # EN
 
